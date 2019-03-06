@@ -19,13 +19,14 @@ REWARD=0;
 for MASTERNODE in "${MASTERNODELIST[@]}"; do
 	BALANCE=$(curl -s --connect-timeout 2 "$QUERYURL$MASTERNODE");
 	EXITSTATUS=$?
+	((COUNT++));
+	printf -v NORMCOUNT "%02d" $COUNT
 	if [[ "$EXITSTATUS" -eq 0 ]]; then
-		((COUNT++));
 		INT=${BALANCE%.*};
 		REWARD=$((REWARD+INT-$MNCOLLATERAL));
-		echo -e "$MASTERNODE: $BALANCE / $INT / $((INT-$MNCOLLATERAL))";
+		echo -e "[$NORMCOUNT]$MASTERNODE: $BALANCE / $INT / $((INT-MNCOLLATERAL))";
 	else
-		echo -e "$MASTERNODE: -NA-";
+		echo -e "[$NORMCOUNT]$MASTERNODE: -NA-";
 	fi
 done
 echo -ne "\n$REWARD MAG / $COUNT MASTERNODES = ";
